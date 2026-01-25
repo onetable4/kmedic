@@ -74,6 +74,11 @@ export const deletePrescription = (id: string): boolean => {
     return true;
 };
 
+// 전체 처방 초기화 (새 문서)
+export const clearAllPrescriptions = (): void => {
+    localStorage.removeItem(STORAGE_KEY);
+};
+
 // JSON 파일로 내보내기
 export const exportToJSON = (): void => {
     const prescriptions = getAllPrescriptions();

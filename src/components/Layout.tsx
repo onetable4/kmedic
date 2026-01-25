@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { ReactNode } from 'react';
-import { exportToJSON, importFromJSON } from '../data/storage';
+import { exportToJSON, importFromJSON, clearAllPrescriptions } from '../data/storage';
 import type { DonConversionRate } from '../utils/unitConversion';
 
 interface LayoutProps {
@@ -44,6 +44,13 @@ export const Layout: React.FC<LayoutProps> = ({
         }
     };
 
+    const handleClear = () => {
+        if (window.confirm('모든 처방을 삭제하고 새로 시작하시겠습니까?\n(되돌릴 수 없습니다)')) {
+            clearAllPrescriptions();
+            onRefresh?.();
+        }
+    };
+
     return (
         <div className="layout">
             <header className="header">
@@ -53,6 +60,12 @@ export const Layout: React.FC<LayoutProps> = ({
                         한의학 처방 사전
                     </h1>
                     <nav className="nav">
+                        {/* 새 문서(초기화) 버튼 */}
+                        <button className="nav-btn" onClick={handleClear} title="새 문서 (전체 삭제)">
+                            <span className="btn-icon">🗑️</span>
+                            <span className="btn-text">초기화</span>
+                        </button>
+
                         {/* 단위 토글 버튼 */}
                         <button
                             className={`nav-btn unit-toggle ${showGrams ? 'active' : ''}`}
