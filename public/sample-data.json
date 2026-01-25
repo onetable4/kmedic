@@ -1,0 +1,54 @@
+[
+  {
+    "id": "sample-1",
+    "name": "사군자탕",
+    "herbs": [
+      { "name": "인삼", "amount": 3, "unit": "돈" },
+      { "name": "백출", "amount": 3, "unit": "돈" },
+      { "name": "백복령", "amount": 3, "unit": "돈" },
+      { "name": "자감초", "amount": 1.5, "unit": "돈" }
+    ],
+    "source": "태평혜민화제국방",
+    "effect": "익기건비",
+    "indication": "비위기허증. 면색창백, 언어경미, 사지무력, 음식불화, 대변당박, 설담태백, 맥세연",
+    "modification": "운화가 약하면 진피, 반하를 가한다.",
+    "notes": "보기(補氣)의 기본방",
+    "createdAt": "2025-01-25T03:00:00.000Z",
+    "updatedAt": "2025-01-25T03:00:00.000Z"
+  },
+  {
+    "id": "sample-2",
+    "name": "사물탕",
+    "herbs": [
+      { "name": "숙지황", "amount": 4, "unit": "돈" },
+      { "name": "당귀", "amount": 3, "unit": "돈" },
+      { "name": "백작약", "amount": 3, "unit": "돈" },
+      { "name": "천궁", "amount": 2, "unit": "돈" }
+    ],
+    "source": "태평혜민화제국방",
+    "effect": "보혈조혈",
+    "indication": "영혈허체. 두훈목현, 면색무화, 심계실면, 월경불조, 설담맥세",
+    "notes": "보혈(補血)의 기본방",
+    "createdAt": "2025-01-25T03:00:00.000Z",
+    "updatedAt": "2025-01-25T03:00:00.000Z"
+  },
+  {
+    "id": "sample-3",
+    "name": "팔물탕",
+    "herbs": [
+      { "name": "인삼", "amount": 3, "unit": "돈" },
+      { "name": "백출", "amount": 3, "unit": "돈" },
+      { "name": "백복령", "amount": 3, "unit": "돈" },
+      { "name": "자감초", "amount": 1.5, "unit": "돈" },
+      { "name": "숙지황", "amount": 4, "unit": "돈" },
+      { "name": "당귀", "amount": 3, "unit": "돈" },
+      { "name": "백작약", "amount": 3, "unit": "돈" },
+      { "name": "천궁", "amount": 2, "unit": "돈" }
+    ],
+    "source": "정체류요",
+    "effect": "기혈쌍보",
+    "indication": "기혈양허. 면색위황, 두훈목현, 사지권태, 기단나언, 심계정충, 음식감소, 설담태박, 맥세허",
+    "createdAt": "2025-01-25T03:00:00.000Z",
+    "updatedAt": "2025-01-25T03:00:00.000Z"
+  }
+]
