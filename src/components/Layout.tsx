@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import type { ReactNode } from 'react';
 import { exportToJSON, importFromJSON } from '../data/storage';
+import type { DonConversionRate } from '../utils/unitConversion';
 
 interface LayoutProps {
     children: ReactNode;
     onRefresh?: () => void;
+    showGrams: boolean;
+    donRate: DonConversionRate;
+    onToggleGrams: () => void;
+    onDonRateChange: (rate: DonConversionRate) => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, onRefresh }) => {
+export const Layout: React.FC<LayoutProps> = ({
+    children,
+    onRefresh,
+    showGrams,
+    donRate,
+    onToggleGrams,
+    onDonRateChange,
+}) => {
     const [importing, setImporting] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
 
     const handleExport = () => {
         exportToJSON();
@@ -40,6 +53,26 @@ export const Layout: React.FC<LayoutProps> = ({ children, onRefresh }) => {
                         한의학 처방 사전
                     </h1>
                     <nav className="nav">
+                        {/* 단위 토글 버튼 */}
+                        <button
+                            className={`nav-btn unit-toggle ${showGrams ? 'active' : ''}`}
+                            onClick={onToggleGrams}
+                            title="원전/g 표기 전환"
+                        >
+                            <span className="btn-icon">⚖️</span>
+                            <span className="btn-text">{showGrams ? 'g 표시' : '원전 표기'}</span>
+                        </button>
+
+                        {/* 설정 버튼 */}
+                        <button
+                            className="nav-btn"
+                            onClick={() => setShowSettings(!showSettings)}
+                            title="단위 설정"
+                        >
+                            <span className="btn-icon">⚙️</span>
+                            <span className="btn-text">설정</span>
+                        </button>
+
                         <button className="nav-btn" onClick={handleExport} title="내보내기">
                             <span className="btn-icon">📤</span>
                             <span className="btn-text">내보내기</span>
@@ -57,6 +90,35 @@ export const Layout: React.FC<LayoutProps> = ({ children, onRefresh }) => {
                         </label>
                     </nav>
                 </div>
+
+                {/* 설정 패널 */}
+                {showSettings && (
+                    <div className="settings-panel">
+                        <div className="settings-group">
+                            <label>1돈 변환 기준</label>
+                            <div className="radio-group">
+                                <label className={`radio-label ${donRate === 3.75 ? 'active' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        name="donRate"
+                                        checked={donRate === 3.75}
+                                        onChange={() => onDonRateChange(3.75)}
+                                    />
+                                    3.75g
+                                </label>
+                                <label className={`radio-label ${donRate === 4 ? 'active' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        name="donRate"
+                                        checked={donRate === 4}
+                                        onChange={() => onDonRateChange(4)}
+                                    />
+                                    4g
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </header>
             <main className="main-content">
                 {children}

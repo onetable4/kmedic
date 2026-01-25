@@ -5,13 +5,16 @@ import { PrescriptionList } from './components/PrescriptionList';
 import { PrescriptionDetail } from './components/PrescriptionDetail';
 import { PrescriptionForm } from './components/PrescriptionForm';
 import { usePrescriptions } from './hooks/usePrescriptions';
+import { useUnitSettings } from './hooks/useUnitSettings';
 import type { Prescription, PrescriptionInput } from './types/prescription';
+import type { DonConversionRate } from './utils/unitConversion';
 import './index.css';
 
 type ViewMode = 'list' | 'detail' | 'add' | 'edit';
 
 function App() {
   const { prescriptions, add, update, remove, search, refresh } = usePrescriptions();
+  const { showGrams, donRate, toggleShowGrams, setDonRate } = useUnitSettings();
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<Prescription[] | null>(null);
@@ -76,17 +79,30 @@ function App() {
     setSelectedPrescription(null);
   };
 
+  // 변환율 변경 핸들러
+  const handleDonRateChange = (rate: DonConversionRate) => {
+    setDonRate(rate);
+  };
+
   // 표시할 처방 목록
   const displayPrescriptions = filteredPrescriptions ?? prescriptions;
 
   return (
-    <Layout onRefresh={refresh}>
+    <Layout
+      onRefresh={refresh}
+      showGrams={showGrams}
+      donRate={donRate}
+      onToggleGrams={toggleShowGrams}
+      onDonRateChange={handleDonRateChange}
+    >
       <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
 
       <PrescriptionList
         prescriptions={displayPrescriptions}
         onSelect={handleSelect}
         onAdd={handleAddStart}
+        showGrams={showGrams}
+        donRate={donRate}
       />
 
       {viewMode === 'detail' && selectedPrescription && (
@@ -95,6 +111,8 @@ function App() {
           onEdit={handleEditStart}
           onDelete={handleDelete}
           onClose={handleClose}
+          showGrams={showGrams}
+          donRate={donRate}
         />
       )}
 

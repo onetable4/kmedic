@@ -1,11 +1,15 @@
 import React from 'react';
 import type { Prescription } from '../types/prescription';
+import type { DonConversionRate } from '../utils/unitConversion';
+import { formatDosage } from '../utils/unitConversion';
 
 interface PrescriptionDetailProps {
     prescription: Prescription;
     onEdit: () => void;
     onDelete: () => void;
     onClose: () => void;
+    showGrams: boolean;
+    donRate: DonConversionRate;
 }
 
 export const PrescriptionDetail: React.FC<PrescriptionDetailProps> = ({
@@ -13,6 +17,8 @@ export const PrescriptionDetail: React.FC<PrescriptionDetailProps> = ({
     onEdit,
     onDelete,
     onClose,
+    showGrams,
+    donRate,
 }) => {
     const handleDelete = () => {
         if (window.confirm(`"${prescription.name}" 처방을 삭제하시겠습니까?`)) {
@@ -35,7 +41,7 @@ export const PrescriptionDetail: React.FC<PrescriptionDetailProps> = ({
                 )}
 
                 <div className="detail-section">
-                    <h3>구성 약재</h3>
+                    <h3>구성 약재 {showGrams && <span className="unit-indicator">(g 변환 표시중)</span>}</h3>
                     <table className="herbs-table">
                         <thead>
                             <tr>
@@ -47,7 +53,7 @@ export const PrescriptionDetail: React.FC<PrescriptionDetailProps> = ({
                             {prescription.herbs.map((herb, index) => (
                                 <tr key={index}>
                                     <td>{herb.name}</td>
-                                    <td>{herb.amount} {herb.unit}</td>
+                                    <td>{formatDosage(herb.amount, herb.unit, showGrams, donRate)}</td>
                                 </tr>
                             ))}
                         </tbody>

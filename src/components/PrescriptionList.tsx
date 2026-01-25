@@ -1,17 +1,22 @@
 import React from 'react';
 import type { Prescription } from '../types/prescription';
+import type { DonConversionRate } from '../utils/unitConversion';
 import { PrescriptionCard } from './PrescriptionCard';
 
 interface PrescriptionListProps {
     prescriptions: Prescription[];
     onSelect: (prescription: Prescription) => void;
     onAdd: () => void;
+    showGrams: boolean;
+    donRate: DonConversionRate;
 }
 
 export const PrescriptionList: React.FC<PrescriptionListProps> = ({
     prescriptions,
     onSelect,
-    onAdd
+    onAdd,
+    showGrams,
+    donRate,
 }) => {
     return (
         <div className="prescription-list">
@@ -40,6 +45,8 @@ export const PrescriptionList: React.FC<PrescriptionListProps> = ({
                             key={prescription.id}
                             prescription={prescription}
                             onClick={() => onSelect(prescription)}
+                            showGrams={showGrams}
+                            donRate={donRate}
                         />
                     ))}
                 </div>

@@ -1,12 +1,21 @@
 import React from 'react';
 import type { Prescription } from '../types/prescription';
+import type { DonConversionRate } from '../utils/unitConversion';
+import { formatDosage } from '../utils/unitConversion';
 
 interface PrescriptionCardProps {
     prescription: Prescription;
     onClick: () => void;
+    showGrams: boolean;
+    donRate: DonConversionRate;
 }
 
-export const PrescriptionCard: React.FC<PrescriptionCardProps> = ({ prescription, onClick }) => {
+export const PrescriptionCard: React.FC<PrescriptionCardProps> = ({
+    prescription,
+    onClick,
+    showGrams,
+    donRate,
+}) => {
     // 주요 약재 표시 (최대 5개)
     const mainHerbs = prescription.herbs.slice(0, 5);
     const remainingCount = prescription.herbs.length - 5;
@@ -23,7 +32,7 @@ export const PrescriptionCard: React.FC<PrescriptionCardProps> = ({ prescription
             <div className="card-herbs">
                 {mainHerbs.map((herb, index) => (
                     <span key={index} className="herb-tag">
-                        {herb.name} {herb.amount}{herb.unit}
+                        {herb.name} {formatDosage(herb.amount, herb.unit, showGrams, donRate)}
                     </span>
                 ))}
                 {remainingCount > 0 && (
