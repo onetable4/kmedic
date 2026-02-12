@@ -50,9 +50,11 @@ export const usePrescriptions = () => {
     const search = useCallback((
         query: string,
         includeHerbs?: string[],
-        excludeHerbs?: string[]
+        excludeHerbs?: string[],
+        modHerb?: string,
+        modAction?: string,
     ): Prescription[] => {
-        return searchPrescriptions(query, includeHerbs, excludeHerbs);
+        return searchPrescriptions(query, includeHerbs, excludeHerbs, modHerb, modAction);
     }, []);
 
     // 데이터 새로고침

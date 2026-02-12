@@ -132,7 +132,9 @@ export const importFromJSON = (file: File): Promise<number> => {
 export const searchPrescriptions = (
     query: string,
     includeHerbs?: string[],
-    excludeHerbs?: string[]
+    excludeHerbs?: string[],
+    modHerb?: string,
+    modAction?: string,
 ): Prescription[] => {
     let prescriptions = getAllPrescriptions();
 
@@ -140,7 +142,8 @@ export const searchPrescriptions = (
     if (query.trim()) {
         const lowerQuery = query.toLowerCase();
         prescriptions = prescriptions.filter(p =>
-            p.name.toLowerCase().includes(lowerQuery)
+            p.name.toLowerCase().includes(lowerQuery) ||
+            (p.hanja && p.hanja.includes(query))
         );
     }
 
@@ -148,7 +151,7 @@ export const searchPrescriptions = (
     if (includeHerbs && includeHerbs.length > 0) {
         prescriptions = prescriptions.filter(p =>
             includeHerbs.every(herb =>
-                p.herbs.some(h => h.name.includes(herb))
+                p.herbs.some(h => h.name.includes(herb) || (h.hanja && h.hanja.includes(herb)))
             )
         );
     }
@@ -157,9 +160,28 @@ export const searchPrescriptions = (
     if (excludeHerbs && excludeHerbs.length > 0) {
         prescriptions = prescriptions.filter(p =>
             !excludeHerbs.some(herb =>
-                p.herbs.some(h => h.name.includes(herb))
+                p.herbs.some(h => h.name.includes(herb) || (h.hanja && h.hanja.includes(herb)))
             )
         );
+    }
+
+    // 가감법 본초 검색
+    if (modHerb && modHerb.trim()) {
+        const herbQuery = modHerb.trim();
+        prescriptions = prescriptions.filter(p => {
+            if (!p.modifications) return false;
+            return p.modifications.some(mod =>
+                mod.changes.some(change => {
+                    const herbMatch = change.herb.includes(herbQuery) || change.herbKo.includes(herbQuery);
+                    if (!herbMatch) return false;
+                    // 액션 필터가 있으면 추가 검사
+                    if (modAction && modAction.trim()) {
+                        return change.action === modAction;
+                    }
+                    return true;
+                })
+            );
+        });
     }
 
     return prescriptions;

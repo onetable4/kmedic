@@ -20,11 +20,11 @@ function App() {
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<Prescription[] | null>(null);
 
   // 검색 핸들러
-  const handleSearch = (query: string, includeHerbs: string[], excludeHerbs: string[]) => {
-    if (!query && includeHerbs.length === 0 && excludeHerbs.length === 0) {
+  const handleSearch = (query: string, includeHerbs: string[], excludeHerbs: string[], modHerb: string = '', modAction: string = '') => {
+    if (!query && includeHerbs.length === 0 && excludeHerbs.length === 0 && !modHerb && !modAction) {
       setFilteredPrescriptions(null);
     } else {
-      const results = search(query, includeHerbs, excludeHerbs);
+      const results = search(query, includeHerbs, excludeHerbs, modHerb, modAction);
       setFilteredPrescriptions(results);
     }
   };

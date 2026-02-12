@@ -43,6 +43,15 @@ export const PrescriptionCard: React.FC<PrescriptionCardProps> = ({
             {prescription.effect && (
                 <p className="card-effect">{prescription.effect}</p>
             )}
+
+            <div className="card-badges">
+                {prescription.modifications && prescription.modifications.length > 0 && (
+                    <span className="card-mod-badge">⚖️ 가감 {prescription.modifications.length}</span>
+                )}
+                {prescription.dosageMethod && (
+                    <span className="card-dosage-badge">💊 복용법</span>
+                )}
+            </div>
         </div>
     );
 };
