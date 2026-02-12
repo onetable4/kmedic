@@ -44,35 +44,43 @@ export const Layout: React.FC<LayoutProps> = ({
         }
     };
 
-    const handleClear = () => {
-        if (window.confirm('모든 처방을 삭제하고 새로 시작하시겠습니까?\n(되돌릴 수 없습니다)')) {
-            clearAllPrescriptions();
-            onRefresh?.();
-        }
+    const handleClear = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setTimeout(() => {
+            if (window.confirm('모든 처방을 삭제하고 새로 시작하시겠습니까?\n(되돌릴 수 없습니다)')) {
+                clearAllPrescriptions();
+                onRefresh?.();
+            }
+        }, 0);
     };
 
-    const handleLoadBangyak = async () => {
-        if (!window.confirm('방약합편 데이터(440 처방)를 불러옵니다.\n기존 데이터에 추가됩니다. 계속하시겠습니까?')) return;
+    const handleLoadBangyak = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setTimeout(async () => {
+            if (!window.confirm('방약합편 데이터(440 처방)를 불러옵니다.\n기존 데이터에 추가됩니다. 계속하시겠습니까?')) return;
 
-        try {
-            const base = import.meta.env.BASE_URL || '/';
-            const res = await fetch(`${base}bangyak-prescriptions-v2.json`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
+            try {
+                const base = import.meta.env.BASE_URL || '/';
+                const res = await fetch(`${base}bangyak-prescriptions-v2.json`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
 
-            // localStorage에 저장 (기존 데이터와 병합)
-            const existingStr = localStorage.getItem('k-medicine-prescriptions');
-            const existing = existingStr ? JSON.parse(existingStr) : [];
-            const existingIds = new Set(existing.map((p: { id: string }) => p.id));
-            const newItems = data.filter((p: { id: string }) => !existingIds.has(p.id));
-            const merged = [...existing, ...newItems];
-            localStorage.setItem('k-medicine-prescriptions', JSON.stringify(merged));
+                // localStorage에 저장 (기존 데이터와 병합)
+                const existingStr = localStorage.getItem('k-medicine-prescriptions');
+                const existing = existingStr ? JSON.parse(existingStr) : [];
+                const existingIds = new Set(existing.map((p: { id: string }) => p.id));
+                const newItems = data.filter((p: { id: string }) => !existingIds.has(p.id));
+                const merged = [...existing, ...newItems];
+                localStorage.setItem('k-medicine-prescriptions', JSON.stringify(merged));
 
-            alert(`방약합편에서 ${newItems.length}개의 처방이 추가되었습니다.`);
-            onRefresh?.();
-        } catch (err) {
-            alert('방약합편 로드 실패: ' + (err as Error).message);
-        }
+                alert(`방약합편에서 ${newItems.length}개의 처방이 추가되었습니다.`);
+                onRefresh?.();
+            } catch (err) {
+                alert('방약합편 로드 실패: ' + (err as Error).message);
+            }
+        }, 0);
     };
 
     return (
@@ -85,13 +93,13 @@ export const Layout: React.FC<LayoutProps> = ({
                     </h1>
                     <nav className="nav">
                         {/* 방약합편 불러오기 */}
-                        <button className="nav-btn" onClick={handleLoadBangyak} title="방약합편 데이터 불러오기">
+                        <button type="button" className="nav-btn" onClick={handleLoadBangyak} title="방약합편 데이터 불러오기">
                             <span className="btn-icon">📜</span>
                             <span className="btn-text">방약합편</span>
                         </button>
 
                         {/* 새 문서(초기화) 버튼 */}
-                        <button className="nav-btn" onClick={handleClear} title="새 문서 (전체 삭제)">
+                        <button type="button" className="nav-btn" onClick={handleClear} title="새 문서 (전체 삭제)">
                             <span className="btn-icon">🗑️</span>
                             <span className="btn-text">초기화</span>
                         </button>
