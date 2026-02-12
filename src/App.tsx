@@ -4,6 +4,7 @@ import { SearchBar } from './components/SearchBar';
 import { PrescriptionList } from './components/PrescriptionList';
 import { PrescriptionDetail } from './components/PrescriptionDetail';
 import { PrescriptionForm } from './components/PrescriptionForm';
+import { HerbModLookup } from './components/HerbModLookup';
 import { usePrescriptions } from './hooks/usePrescriptions';
 import { useUnitSettings } from './hooks/useUnitSettings';
 import type { Prescription, PrescriptionInput } from './types/prescription';
@@ -18,6 +19,7 @@ function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<Prescription[] | null>(null);
+  const [showHerbLookup, setShowHerbLookup] = useState(false);
 
   // 검색 핸들러
   const handleSearch = (query: string, includeHerbs: string[], excludeHerbs: string[], modHerb: string = '', modAction: string = '') => {
@@ -97,6 +99,16 @@ function App() {
     >
       <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
 
+      <div className="lookup-button-row">
+        <button
+          type="button"
+          className="lookup-open-btn"
+          onClick={() => setShowHerbLookup(true)}
+        >
+          🔍 본초 가감법 검색
+        </button>
+      </div>
+
       <PrescriptionList
         prescriptions={displayPrescriptions}
         onSelect={handleSelect}
@@ -121,6 +133,17 @@ function App() {
           prescription={viewMode === 'edit' ? selectedPrescription ?? undefined : undefined}
           onSave={handleSave}
           onCancel={handleClose}
+        />
+      )}
+
+      {showHerbLookup && (
+        <HerbModLookup
+          onClose={() => setShowHerbLookup(false)}
+          onNavigate={(p) => {
+            setShowHerbLookup(false);
+            setSelectedPrescription(p);
+            setViewMode('detail');
+          }}
         />
       )}
     </Layout>
